@@ -1,4 +1,4 @@
-<project name="Neuron Robotics Video for Java" default="deploy" basedir=".">
+<project name="Neuron Robotics ISense IMU" default="deploy" basedir=".">
 
   <property file="build.properties"/>
  

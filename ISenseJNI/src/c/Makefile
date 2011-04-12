@@ -10,7 +10,7 @@ LINKLIN32=g++ -m32 -shared
 
 
 CCLIN64=gcc $(LININCLUDE) -O3 -Wall -c -fmessage-length=0 -fPIC -m64 -MMD
-LINKLIN64=g++ -m64  
+LINKLIN64=g++ -m64 -shared
 
 dirs:
 	if (test -d build); then rm -rf build;mkdir build;else mkdir build; fi
@@ -29,4 +29,10 @@ linux:dirs
 	$(CCLIN32) src/libCode/main.c -o build/main.o
 	$(CCLIN32) src/libCode/isense.c -o build/isense.o
 	$(LINKLIN32) -o"jni/native/linux/x86_32/libISenseJNI.so" $(LINOBJ) 
+	rm build/*
+linux64:dirs	
+	$(CCLIN64) src/isenseJNI.c -o build/isenseJNI.o
+	$(CCLIN64) src/libCode/main.c -o build/main.o
+	$(CCLIN64) src/libCode/isense.c -o build/isense.o
+	$(LINKLIN64) -o"jni/native/linux/x86_64/libISenseJNI.so" $(LINOBJ) 
 	rm build/*

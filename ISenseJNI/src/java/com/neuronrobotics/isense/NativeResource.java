@@ -44,6 +44,14 @@ public class NativeResource {
 	private void inJarLoad(String name)throws UnsatisfiedLinkError, NativeResourceException{
 		//start by assuming the library can be loaded from the jar
 		InputStream resourceSource = locateResource(name);
+		/*
+		if(resourceSource == null){
+			System.err.println("Local Resource is null");
+			throw new NativeResourceException("Unable to load native resource from given path.\n" );
+		}else{
+			System.out.println("Jar resource ok");
+		}
+		*/
 		File resourceLocation = prepResourceLocation(name);
 		try {
 			copyResource(resourceSource, resourceLocation);
@@ -93,14 +101,14 @@ public class NativeResource {
 			System.err.println("Can't load native file: "+name+" for os arch: "+OSUtil.getOsArch());
 			return null;
 		}
-		//System.out.println("Loading "+file);
+		System.out.println("Loading "+file);
 		return getClass().getResourceAsStream(file);
 	}
 	
 	private void loadResource(File resource) {
 		if(!resource.canRead())
 			throw new RuntimeException("Cant open JNI file: "+resource.getAbsolutePath());
-		//System.out.println("Loading: "+resource.getAbsolutePath());
+		System.out.println("Loading: "+resource.getAbsolutePath());
 		System.load(resource.getAbsolutePath());
 	}
 
@@ -179,7 +187,7 @@ public class NativeResource {
 		if(fd == null || !fd.canRead()) {
 			throw new NativeResourceException("Unable to deploy native resource");
 		}
-		//System.out.println("Local file: "+fd.getAbsolutePath());
+		System.out.println("Local file: "+fd.getAbsolutePath());
 		return fd;
 	}
 }

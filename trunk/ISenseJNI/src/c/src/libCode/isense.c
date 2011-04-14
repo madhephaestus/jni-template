@@ -104,6 +104,10 @@ ISD_QRY_RBUFFER_FN    _ISD_RingBufferQuery          = NULL;
 //==========================================================================================
 static DLL *ISD_LoadLib( void )
 {
+#if defined LINUX
+	char *errorText;
+#endif // LINUX
+
     if(hLib = dll_load( ISD_LIB_NAME ))
     {
         _ISD_OpenTracker            = ( ISD_OPEN_FN )           dll_entrypoint( hLib, "ISD_OpenTracker" );
@@ -134,11 +138,19 @@ static DLL *ISD_LoadLib( void )
         _ISD_RingBufferQuery        = ( ISD_QRY_RBUFFER_FN )    dll_entrypoint( hLib, "ISD_RingBufferQuery" );
     }
     
-    if( hLib == NULL )
+	if( hLib == NULL )
     {
         printf("Could not load %s\n", ISD_LIB_NAME);
-    }
+
+#if defined LINUX
+        // Print out the reason for the error as well as the error about loading the library
+        if ((errorText = dlerror()) != NULL)  {
+                printf("%s\n", errorText);
+        }
     
+#endif // LINUX
+    }
+
     return hLib;
 }
 

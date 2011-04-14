@@ -17,6 +17,19 @@
 typedef BOOL                Bool;
 typedef HWND                Hwnd;
 
+#elif defined (__x86_64__)
+typedef unsigned char       BYTE;
+typedef int                 INT32;
+typedef unsigned int        UINT32;
+typedef unsigned int        DWORD;
+typedef INT32               LONG;
+typedef INT32               BOOL;
+typedef INT32               Bool;
+typedef unsigned short      WORD;
+typedef float               FLOAT;
+typedef int                 HWND;
+typedef long                Hwnd;
+
 #else
 
 typedef unsigned char       BYTE;
@@ -28,6 +41,3 @@ typedef long                Hwnd;
 
 #endif
 #endif
-
-
-

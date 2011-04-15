@@ -151,12 +151,12 @@ static int init_v4l2(struct vdIn *vd)
     if(vd->grabmethod) {
         if(!(vd->cap.capabilities & V4L2_CAP_STREAMING)) {
             fprintf(stderr, "%s does not support streaming i/o\n", vd->videodevice);
-            goto fatal;
+            //goto fatal;
         }
     } else {
         if(!(vd->cap.capabilities & V4L2_CAP_READWRITE)) {
             fprintf(stderr, "%s does not support read i/o\n", vd->videodevice);
-            goto fatal;
+            //goto fatal;
         }
     }
 

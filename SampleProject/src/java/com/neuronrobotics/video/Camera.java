@@ -33,12 +33,7 @@ public class Camera {
 	}
 	
 	public Camera(String device, int hight, int width){
-		if(OSUtil.isWindows()){
-			imp = new CameraWindows();
-			throw new NativeResourceException("OS not yet supported");	
-		}
-		if(OSUtil.isOSX()){
-			imp = new CameraOSX();
+		if(OSUtil.isWindows() || OSUtil.isOSX()){
 			throw new NativeResourceException("OS not yet supported");	
 		}
 		nativeClose(device);

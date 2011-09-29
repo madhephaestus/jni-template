@@ -69,7 +69,7 @@ public class Camera {
 		
 		return imp.getAvailibleDevices();
 	}
-	public  BufferedImage ByteArrayToImage(byte [] array) throws IOException{
+	public static BufferedImage ByteArrayToImage(byte [] array) throws IOException{
 		//System.out.println("Image: "+new ByteList(array));
 		BufferedImage image = null;
 		image = ImageIO.read(new ByteArrayInputStream(array));

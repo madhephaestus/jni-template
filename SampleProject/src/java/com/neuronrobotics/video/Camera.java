@@ -50,6 +50,9 @@ public class Camera {
 		}
 		dev=device;
 	}
+	public byte [] getImageArray(){
+		return nativeGetImage();
+	}
 	public BufferedImage getImage(){
 		byte [] byteArray = nativeGetImage();
 		if(byteArray == null)

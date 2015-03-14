@@ -1,0 +1,1 @@
+This project can be used as a simple template for creating custom JNI's.

@@ -20,10 +20,6 @@
 static struct vdIn vid;
 static int isOpen = 0;
 static int lastCapt = 0;
-struct v4l2_capability cap;
-struct v4l2_format fmt;
-struct v4l2_buffer buf;
-struct v4l2_requestbuffers rb;
 
 int deviceExist(){
 	FILE * f;
@@ -40,10 +36,6 @@ int deviceExist(){
 int initializeVideo(const char * device, int hight, int width){
 	if(isOpen)
 		closeVideo(device);
-	vid.buf=&buf;
-	vid.cap=&cap;
-	vid.fmt=&fmt;
-	vid.rb=&rb;
 	if(init_videoIn(&vid, (char *)device,width,hight,V4L2_PIX_FMT_MJPEG) == 0 ){
 		isOpen = 1;
 		captureImage();
@@ -79,7 +71,7 @@ int captureImage(){
 		if(vid.formatIn == V4L2_PIX_FMT_YUYV)
 			lastCapt = vid.framesizeIn;
 		else
-			lastCapt = vid.buf->bytesused;
+			lastCapt = vid.buf.bytesused;
 		//fprintf(stderr, "%s: %d", "\ncapture OK",lastCapt);
 		return lastCapt;
 	}

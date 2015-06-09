@@ -74,6 +74,7 @@ int init_videoIn(struct vdIn *vd, char *device, int width,int height, int format
     vd->signalquit = 1;
     vd->width = width;
     vd->height = height;
+
     //vd->fps = fps;
     vd->formatIn = format;
 //    vd->grabmethod = grabmethod;

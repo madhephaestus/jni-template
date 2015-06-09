@@ -20,6 +20,10 @@
 static struct vdIn vid;
 static int isOpen = 0;
 static int lastCapt = 0;
+struct v4l2_capability cap;
+struct v4l2_format fmt;
+struct v4l2_buffer buf;
+struct v4l2_requestbuffers rb;
 
 int deviceExist(){
 	FILE * f;
@@ -36,6 +40,10 @@ int deviceExist(){
 int initializeVideo(const char * device, int hight, int width){
 	if(isOpen)
 		closeVideo(device);
+	vid.buf=&buf;
+	vid.cap=&cap;
+	vid.fmt=&fmt;
+	vid.rb=&rb;
 	if(init_videoIn(&vid, (char *)device,width,hight,V4L2_PIX_FMT_MJPEG) == 0 ){
 		isOpen = 1;
 		captureImage();
@@ -67,19 +75,9 @@ int captureImage(){
 	if(!isOpen)
 		return 0;
 	//report_warning("\nStarting capture...");
-	if( uvcGrab(&vid)==0){
-		if(vid.formatIn == V4L2_PIX_FMT_YUYV)
-			lastCapt = vid.framesizeIn;
-		else
-			lastCapt = vid.buf.bytesused;
-		//fprintf(stderr, "%s: %d", "\ncapture OK",lastCapt);
-		return lastCapt;
-	}
-	else{
-		report_warning("\nnative:captureImage() Image capture failed\n");
-		return 0;
-	}
-
+	struct vdIn *vd = &vid;
+	lastCapt = uvcGrab(vd);
+	return lastCapt;
 }
 
 
@@ -90,6 +88,7 @@ int getImage(char * imageArray){
 	if(vid.formatIn == V4L2_PIX_FMT_YUYV){
 		lastCapt=compress_yuyv_to_jpeg(&vid,(unsigned char*)imageArray,vid.framesizeIn,100);
 	}else{
+		report_warning("\nStart Jpeg copy \n");
 		lastCapt=memcpy_picture((unsigned char*) imageArray,vid.tmpbuffer,lastCapt);
 	}
 	//report_warning("\nCopy ok");

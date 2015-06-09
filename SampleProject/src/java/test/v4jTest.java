@@ -32,7 +32,7 @@ public class v4jTest {
 					frame.add(directPanel);
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
-					for(int i=0;i<100;i++){
+					for(int i=0;i<5;i++){
 						im=c.getImage();
 						if(im!= null){
 							directPanel.removeAll();

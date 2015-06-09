@@ -61,6 +61,7 @@ JNIEXPORT jboolean JNICALL Camera(nativeClose)( JNIEnv *env,jobject jobj,jstring
 JNIEXPORT jbyteArray JNICALL Camera(nativeGetImage)( JNIEnv *env,jobject jobj,jstring jstr ){
 	//report_warning("\nAttempting to get image");
 	int size = captureImage();
+	fprintf(stderr, "Image Size= %d \n", size);
 	if (size == 0)
 		return NULL;
 	char array[size];

@@ -76,10 +76,10 @@ struct vdIn {
     char *videodevice;
     char *status;
     char *pictName;
-    struct v4l2_capability cap;
-    struct v4l2_format fmt;
-    struct v4l2_buffer buf;
-    struct v4l2_requestbuffers rb;
+    struct v4l2_capability *cap;
+    struct v4l2_format *fmt;
+    struct v4l2_buffer *buf;
+    struct v4l2_requestbuffers *rb;
     void *mem[NB_BUFFER];
     unsigned char *tmpbuffer;
     unsigned char *framebuffer;

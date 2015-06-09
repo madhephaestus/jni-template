@@ -24,27 +24,31 @@ public class v4jTest {
 			Set<String> devices = Camera.getAvailibleDevices();
 			System.out.println("Devices: "+devices);
 			for(String dev:devices){
-				Camera c = new Camera(dev,320,240);
-				Image im;
-				JPanel directPanel = new JPanel();
-				JFrame frame = new JFrame();
-				frame.add(directPanel);
-				frame.setLocationRelativeTo(null);
-				frame.setVisible(true);
-				for(int i=0;i<100;i++){
-					im=c.getImage();
-					if(im!= null){
-						directPanel.removeAll();
-						JLabel l = new JLabel();
-						l.setIcon(new ImageIcon(im));
-						directPanel.add(l);
-						directPanel.invalidate();
-						frame.pack();
-					}else{
-						System.err.println("Image is null");
+				try{
+					Camera c = new Camera(dev,320,240);
+					Image im;
+					JPanel directPanel = new JPanel();
+					JFrame frame = new JFrame();
+					frame.add(directPanel);
+					frame.setLocationRelativeTo(null);
+					frame.setVisible(true);
+					for(int i=0;i<100;i++){
+						im=c.getImage();
+						if(im!= null){
+							directPanel.removeAll();
+							JLabel l = new JLabel();
+							l.setIcon(new ImageIcon(im));
+							directPanel.add(l);
+							directPanel.invalidate();
+							frame.pack();
+						}else{
+							System.err.println("Image is null");
+						}
 					}
+					c.close();
+				}catch(Exception e){
+					e.printStackTrace();
 				}
-				c.close();
 			}
 		}catch(Exception ex){
 			System.err.println("Failed!");

@@ -3,7 +3,7 @@ LINKLINA8=~/CodeSourcery/Sourcery_G++_Lite/bin/arm-none-linux-gnueabi-g++ -share
 
 
 LINOBJ=build/LinuxImp.o build/v4jCommon.o build/v4l2uvc.o 
-LININCLUDE=-I"./include" -I/usr/src/linux-headers-2.6.32-26-generic/include/ -I/usr/lib/jvm/java-6-openjdk/include/
+LININCLUDE=-I"./include" -I/usr/src/linux-headers-2.6.32-26-generic/include/ -I/usr/lib/jvm/java-8-oracle/include/
 
 CCLIN32=gcc $(LININCLUDE) -O3 -Wall -c -fmessage-length=0 -fPIC -m32 -MMD
 LINKLIN32=g++ -m32 -shared 

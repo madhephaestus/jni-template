@@ -88,7 +88,7 @@ int getImage(char * imageArray){
 	if(vid.formatIn == V4L2_PIX_FMT_YUYV){
 		lastCapt=compress_yuyv_to_jpeg(&vid,(unsigned char*)imageArray,vid.framesizeIn,100);
 	}else{
-		report_warning("\nStart Jpeg copy \n");
+		//report_warning("\nStart Jpeg copy \n");
 		lastCapt=memcpy_picture((unsigned char*) imageArray,vid.tmpbuffer,lastCapt);
 	}
 	//report_warning("\nCopy ok");

@@ -3,6 +3,6 @@
 	<classpathentry kind="src" path="src/java"/>
 	<classpathentry kind="src" path="src/c/jni"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NRSDK"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/java-bowler-git"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -84,12 +84,12 @@ int init_videoIn(struct vdIn *vd, char *device, int width,int height, int format
 
 
     // enumerating formats
-    int currentWidth, currentHeight = 0;
+    //int currentWidth, currentHeight = 0;
     struct v4l2_format currentFormat;
     currentFormat.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     if(xioctl(vd->fd, VIDIOC_G_FMT, &currentFormat) == 0) {
-        currentWidth = currentFormat.fmt.pix.width;
-        currentHeight = currentFormat.fmt.pix.height;
+//        currentWidth = currentFormat.fmt.pix.width;
+//        currentHeight = currentFormat.fmt.pix.height;
         //DBG("Current size: %dx%d\n", currentWidth, currentHeight);
     }
 
@@ -142,19 +142,19 @@ static int init_v4l2(struct vdIn *vd)
         goto fatal;
     }
 
-    if((vd->cap.capabilities & V4L2_CAP_VIDEO_CAPTURE) == 0) {
+    if((vd->cap->capabilities & V4L2_CAP_VIDEO_CAPTURE) == 0) {
         fprintf(stderr, "Error opening device %s: video capture not supported.\n",
                 vd->videodevice);
         goto fatal;;
     }
 
     if(vd->grabmethod) {
-        if(!(vd->cap.capabilities & V4L2_CAP_STREAMING)) {
+        if(!(vd->cap->capabilities & V4L2_CAP_STREAMING)) {
             fprintf(stderr, "%s does not support streaming i/o\n", vd->videodevice);
             //goto fatal;
         }
     } else {
-        if(!(vd->cap.capabilities & V4L2_CAP_READWRITE)) {
+        if(!(vd->cap->capabilities & V4L2_CAP_READWRITE)) {
             fprintf(stderr, "%s does not support read i/o\n", vd->videodevice);
             //goto fatal;
         }
@@ -164,21 +164,21 @@ static int init_v4l2(struct vdIn *vd)
      * set format in
      */
     memset(&vd->fmt, 0, sizeof(struct v4l2_format));
-    vd->fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-    vd->fmt.fmt.pix.width = vd->width;
-    vd->fmt.fmt.pix.height = vd->height;
-    vd->fmt.fmt.pix.pixelformat = vd->formatIn;
-    vd->fmt.fmt.pix.field = V4L2_FIELD_ANY;
+    vd->fmt->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    vd->fmt->fmt.pix.width = vd->width;
+    vd->fmt->fmt.pix.height = vd->height;
+    vd->fmt->fmt.pix.pixelformat = vd->formatIn;
+    vd->fmt->fmt.pix.field = V4L2_FIELD_ANY;
     ret = xioctl(vd->fd, VIDIOC_S_FMT, &vd->fmt);
     if(ret < 0) {
         fprintf(stderr, "Unable to set format: %d res: %dx%d\n", vd->formatIn, vd->width, vd->height);
         goto fatal;
     }
 
-    if((vd->fmt.fmt.pix.width != vd->width) ||(vd->fmt.fmt.pix.height != vd->height)) {
-        //fprintf(stderr, "i: The format asked unavailable, width %d height %d \n", vd->fmt.fmt.pix.width, vd->fmt.fmt.pix.height);
-        vd->width = vd->fmt.fmt.pix.width;
-        vd->height = vd->fmt.fmt.pix.height;
+    if((vd->fmt->fmt.pix.width != vd->width) ||(vd->fmt->fmt.pix.height != vd->height)) {
+        //fprintf(stderr, "i: The format asked unavailable, width %d height %d \n", vd->fmt->fmt.pix.width, vd->fmt->fmt.pix.height);
+        vd->width = vd->fmt->fmt.pix.width;
+        vd->height = vd->fmt->fmt.pix.height;
         /*
          * look the format is not part of the deal ???
          */
@@ -188,8 +188,8 @@ static int init_v4l2(struct vdIn *vd)
 			goto fatal;
 		}
     }
-    if((vd->fmt.fmt.pix.width != vd->width) ||(vd->fmt.fmt.pix.height != vd->height)){
-		if(vd->formatIn != vd->fmt.fmt.pix.pixelformat) {
+    if((vd->fmt->fmt.pix.width != vd->width) ||(vd->fmt->fmt.pix.height != vd->height)){
+		if(vd->formatIn != vd->fmt->fmt.pix.pixelformat) {
 			if(vd->formatIn == V4L2_PIX_FMT_MJPEG) {
 				fprintf(stderr, "The inpout device does not supports MJPEG mode\nYou may also try the YUV mode (-yuv option), but it requires a much more CPU power\n");
 				goto fatal;
@@ -198,7 +198,7 @@ static int init_v4l2(struct vdIn *vd)
 				goto fatal;
 			}
 		} else {
-			vd->formatIn = vd->fmt.fmt.pix.pixelformat;
+			vd->formatIn = vd->fmt->fmt.pix.pixelformat;
 		}
     }
 
@@ -218,9 +218,9 @@ static int init_v4l2(struct vdIn *vd)
      * request buffers
      */
     memset(&vd->rb, 0, sizeof(struct v4l2_requestbuffers));
-    vd->rb.count = NB_BUFFER;
-    vd->rb.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-    vd->rb.memory = V4L2_MEMORY_MMAP;
+    vd->rb->count = NB_BUFFER;
+    vd->rb->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    vd->rb->memory = V4L2_MEMORY_MMAP;
 
     ret = xioctl(vd->fd, VIDIOC_REQBUFS, &vd->rb);
     if(ret < 0) {
@@ -233,9 +233,9 @@ static int init_v4l2(struct vdIn *vd)
      */
     for(i = 0; i < NB_BUFFER; i++) {
         memset(&vd->buf, 0, sizeof(struct v4l2_buffer));
-        vd->buf.index = i;
-        vd->buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-        vd->buf.memory = V4L2_MEMORY_MMAP;
+        vd->buf->index = i;
+        vd->buf->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+        vd->buf->memory = V4L2_MEMORY_MMAP;
         ret = xioctl(vd->fd, VIDIOC_QUERYBUF, &vd->buf);
         if(ret < 0) {
             perror("Unable to query buffer");
@@ -243,11 +243,11 @@ static int init_v4l2(struct vdIn *vd)
         }
 
         if(debug)
-            fprintf(stderr, "length: %u offset: %u\n", vd->buf.length, vd->buf.m.offset);
+            fprintf(stderr, "length: %u offset: %u\n", vd->buf->length, vd->buf->m.offset);
 
         vd->mem[i] = mmap(0 /* start anywhere */ ,
-                          vd->buf.length, PROT_READ | PROT_WRITE, MAP_SHARED, vd->fd,
-                          vd->buf.m.offset);
+                          vd->buf->length, PROT_READ | PROT_WRITE, MAP_SHARED, vd->fd,
+                          vd->buf->m.offset);
         if(vd->mem[i] == MAP_FAILED) {
             perror("Unable to map buffer");
             goto fatal;
@@ -261,9 +261,9 @@ static int init_v4l2(struct vdIn *vd)
      */
     for(i = 0; i < NB_BUFFER; ++i) {
         memset(&vd->buf, 0, sizeof(struct v4l2_buffer));
-        vd->buf.index = i;
-        vd->buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-        vd->buf.memory = V4L2_MEMORY_MMAP;
+        vd->buf->index = i;
+        vd->buf->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+        vd->buf->memory = V4L2_MEMORY_MMAP;
         ret = xioctl(vd->fd, VIDIOC_QBUF, &vd->buf);
         if(ret < 0) {
             perror("Unable to queue buffer");
@@ -317,8 +317,8 @@ int uvcGrab(struct vdIn *vd)
             goto err;
     }
     memset(&vd->buf, 0, sizeof(struct v4l2_buffer));
-    vd->buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-    vd->buf.memory = V4L2_MEMORY_MMAP;
+    vd->buf->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    vd->buf->memory = V4L2_MEMORY_MMAP;
 
     ret = xioctl(vd->fd, VIDIOC_DQBUF, &vd->buf);
     if(ret < 0) {
@@ -328,23 +328,23 @@ int uvcGrab(struct vdIn *vd)
 
     switch(vd->formatIn) {
     case V4L2_PIX_FMT_MJPEG:
-        if(vd->buf.bytesused <= HEADERFRAME1) {
+        if(vd->buf->bytesused <= HEADERFRAME1) {
             /* Prevent crash
                                                         * on empty image */
             fprintf(stderr, "Ignoring empty buffer ...\n");
             return 0;
         }
-        memcpy(vd->tmpbuffer, vd->mem[vd->buf.index], vd->buf.bytesused);
+        memcpy(vd->tmpbuffer, vd->mem[vd->buf->index], vd->buf->bytesused);
 
         if(debug)
-            fprintf(stderr, "bytes in used %d \n", vd->buf.bytesused);
+            fprintf(stderr, "bytes in used %d \n", vd->buf->bytesused);
         break;
 
     case V4L2_PIX_FMT_YUYV:
-        if(vd->buf.bytesused > vd->framesizeIn)
-            memcpy(vd->framebuffer, vd->mem[vd->buf.index], (size_t) vd->framesizeIn);
+        if(vd->buf->bytesused > vd->framesizeIn)
+            memcpy(vd->framebuffer, vd->mem[vd->buf->index], (size_t) vd->framesizeIn);
         else
-            memcpy(vd->framebuffer, vd->mem[vd->buf.index], (size_t) vd->buf.bytesused);
+            memcpy(vd->framebuffer, vd->mem[vd->buf->index], (size_t) vd->buf->bytesused);
         break;
 
     default:
@@ -642,7 +642,7 @@ int setResolution(struct vdIn *vd, int width, int height)
         //DBG("Unmap buffers\n");
         int i;
         for(i = 0; i < NB_BUFFER; i++)
-            munmap(vd->mem[i], vd->buf.length);
+            munmap(vd->mem[i], vd->buf->length);
 
         if(CLOSE_VIDEO(vd->fd) == 0) {
             //DBG("Device closed successfully\n");
